@@ -1,0 +1,7 @@
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
+// imports bootstrap and uses node-sass under the hood to compile the scss file
+
+body {
+  padding: 10px;
+  font-family: sans-serif;
+}

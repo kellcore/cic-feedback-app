@@ -5,4 +5,5 @@ import App from '/imports/ui/App'
 
 Meteor.startup(() => {
   render(<App />, document.getElementById('react-target'));
+  // imports react-target from main.html and renders our App code into it
 });

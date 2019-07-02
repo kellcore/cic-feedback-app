@@ -3,7 +3,8 @@ import Hello from './Hello.jsx';
 import Info from './Info.jsx';
 
 const App = () => (
-  <div>
+  <div className="container">
+    {/* React refers to JS classes when using the class attribute -> className is for CSS instead */}
     <h1>Welcome to Meteor!</h1>
     <Hello />
     <Info />
@@ -11,3 +12,5 @@ const App = () => (
 );
 
 export default App;
+
+
