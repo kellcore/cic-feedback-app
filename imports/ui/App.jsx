@@ -59,6 +59,7 @@ class App extends Component {
     return (
       <div className="container">
         {/* React refers to JS classes when using the class attribute -> className is for CSS instead */}
+        <a href="/helloWorld"> Click me for a surprise! </a>
         <AccountsUIWrapper />
         {/* {this.props.currentUser ? <div> */}
         <form style={{ marginBottom: 10 }} onSubmit={this.createFeedback}>
