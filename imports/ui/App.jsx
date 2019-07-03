@@ -13,6 +13,8 @@ import AccountsUIWrapper from "./AccountsUIWrapper";
 
 
 class App extends Component {
+  state = { resultFilter: [] }
+  // we had to set the state of resultFilter to an empty array on page load so the data will come through
 
   createFeedback = event => {
     // have to use arrow syntax because we want access to the whole class
@@ -52,6 +54,35 @@ class App extends Component {
     }
     // if the user clicks Ok on the confirm prompt, remove the feedback of the associated feedback ID
   };
+
+  studentFilter = event => {
+    // console.log(event.target.value);
+    // shows us we have access to the value typed into the form field for the student filter
+    const nameFilter = event.target.value;
+
+    const resultFilter =
+      this.props.feedback.filter(feedback => {
+        if (feedback.studentID.includes(nameFilter)) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+
+    this.setState({ resultFilter });
+    // have to set the results in state so React will give us access to them in the front end
+  };
+
+  createTableRow = (feedback) => {
+    return <tr key={feedback._id}>
+      <td>{feedback.studentID}</td>
+      <td>{feedback.message}</td>
+      <td>{moment(feedback.timestamp).format("L")}</td>
+      <td><button className="btn btn-warning" onClick={this.editFeedback.bind(this, feedback._id)}>Edit</button></td>
+      <td><button className="btn btn-danger" onClick={this.deleteFeedback.bind(this, feedback._id)}>Delete</button></td>
+    </tr>
+  };
+  // moved this code from the render into a higher-order function that gets referenced -> we've abstracted it
 
   render() {
     // console.log(this.props.feedback);
@@ -100,16 +131,13 @@ class App extends Component {
                 </tr>
               </thead>
               <tbody>
-                {this.props.feedback.map(feedback => {
-                  // console.log(feedback);
-                  return <tr key={feedback._id}>
-                    <td>{feedback.studentID}</td>
-                    <td>{feedback.message}</td>
-                    <td>{moment(feedback.timestamp).format("L")}</td>
-                    <td><button className="btn btn-warning" onClick={this.editFeedback.bind(this, feedback._id)}>Edit</button></td>
-                    <td><button className="btn btn-danger" onClick={this.deleteFeedback.bind(this, feedback._id)}>Delete</button></td>
-                  </tr>
-                })}
+                {this.state.resultFilter.length > 0 ? this.state.resultFilter.map(feedback => {
+                  return this.createTableRow(feedback);
+                }) :
+                  this.props.feedback.map(feedback => {
+                    // console.log(feedback);
+                    return this.createTableRow(feedback);
+                  })}
                 {/* refers to the array we console logged earlier to view what's in the feedback table */}
                 {/* since the result of this.props.feedback is an array, we can iterate over it using the map function */}
                 {/* each time new feedback is entered, we want to return it in a new table row with a new table column */}
@@ -118,6 +146,14 @@ class App extends Component {
                 {/* have to pass in the feedback id so the button knows which feedback to edit */}
               </tbody>
             </table>
+            <div className="row">
+              <div className="col">
+                <form>
+                  <label> Filter Feedback by Student: </label>
+                  <input ref="studentFilter" className="form-control" onChange={this.studentFilter} />
+                </form>
+              </div>
+            </div>
           </div>
         </div>
         {/* <h1>Welcome to Meteor!</h1> */}
