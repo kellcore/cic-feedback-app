@@ -55,6 +55,7 @@ class App extends Component {
       <div className="container">
         {/* React refers to JS classes when using the class attribute -> className is for CSS instead */}
         <AccountsUIWrapper />
+        {/* {this.props.currentUser ? <div> */}
         <form style={{ marginBottom: 10 }} onSubmit={this.createFeedback}>
           {/* using curly braces here instead of quotes because we're using React classes so we have access to functions inside that class */}
           {/* Building out form with tables to make the front end user interface with HTML inside JS -> JSX */}
@@ -114,6 +115,8 @@ class App extends Component {
           </div>
         </div>
         {/* <h1>Welcome to Meteor!</h1> */}
+        { /* </div> : null} */}
+        {/* how do we solve the problem of people being able to view the entire interface without logging in? we wrap everything in a giant div and write an inline ternary operator to handle the logic. if there is a currentUser who's logged in, then display the interface, otherwise display nothing */}
       </div>
     );
   }
@@ -122,12 +125,19 @@ class App extends Component {
 
 
 export default withTracker(() => {
+  Meteor.subscribe("feedback");
+  // this is connecting our publish code on feedback.js with our front end on app.jsx using subscribe and passing in feedback
   return {
-    feedback: Feedback.find({}).fetch()
+    feedback: Feedback.find({}).fetch(),
     // fetch() will put all of the Feedback into an array
+    currentUser: Meteor.user()
+    // user is a property built into Meteor -> we put this in the Tracker because the user may change while working with the interface
   }
 })(App);
 // we tell withTracker that we want to access the info from Feedback in our App
+// the Tracker is what's pulling the data from the database
+
 
 // have to turn on meteor server before running meteor mongo or else it won't load
 // meteor mongo is a shell inside the terminal that directly access the mongodb datatabase
+// installed bcrypt -> a hashing algorithm to store passwords securely in the database so people can't get into the database and see passwords in plain text
