@@ -22,7 +22,9 @@ class App extends Component {
     // go to the DOM, find the element we called student ID, and store the value of it in the variable
     const message = ReactDOM.findDOMNode(this.refs.message).value;
     // console.log(studentID, message);
-    Feedback.insert({ studentID, message, timestamp: new Date() });
+    Meteor.call("feedback.insert", studentID, message);
+    //Feedback.insert({ studentID, message, timestamp: new Date() });
+
     // this is what we write instead of Fetch -> React and Meteor recognized there was something new in the Mongo Collection and updated the information for us
     ReactDOM.findDOMNode(this.refs.studentID).value = "";
     ReactDOM.findDOMNode(this.refs.message).value = "";
@@ -33,8 +35,10 @@ class App extends Component {
     // console.log(feedbackID);
     // checking to make sure the feedback ID is getting passed to the edit button correctly and that our onclick event is working
     const updateFeedback = window.prompt("How would you like to change your feedback?");
+    Meteor.call("feedback.update", feedbackID, updateFeedback);
+    // we call the feedback.update on the API and pass in the feedbackID and updateFeedback variables from the front end
 
-    Feedback.update(feedbackID, { $set: { message: updateFeedback } });
+    // Feedback.update(feedbackID, { $set: { message: updateFeedback } });
     // Feedback refers to the Mongo Collection we set up over at feedback.js so we're directly updating our database -> building an object to set the message equivalent to the information stored in the updateFeedback variable
   };
 
@@ -43,7 +47,8 @@ class App extends Component {
     const confirmDeletion = window.confirm("Are you sure you want to remove this feedback?");
 
     if (confirmDeletion) {
-      Feedback.remove(feedbackID);
+      //Feedback.remove(feedbackID);
+      Meteor.call("feedback.remove", feedbackID);
     }
     // if the user clicks Ok on the confirm prompt, remove the feedback of the associated feedback ID
   };
@@ -141,3 +146,5 @@ export default withTracker(() => {
 // have to turn on meteor server before running meteor mongo or else it won't load
 // meteor mongo is a shell inside the terminal that directly access the mongodb datatabase
 // installed bcrypt -> a hashing algorithm to store passwords securely in the database so people can't get into the database and see passwords in plain text
+
+// we removed insecure package so Meteor blocked edit access from anyone -> means we have to add a method and set up access for logged in users
